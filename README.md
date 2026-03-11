@@ -1,0 +1,2 @@
+# Trinibad-AI
+Idk 
