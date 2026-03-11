@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gemini Chatbot</title>
+  <style>
+    body { font-family: Arial; margin: 40px; background: #f4f4f4; }
+    #chatbox { border: 1px solid #ccc; padding: 15px; height: 400px; overflow-y: auto; background: white; }
+    .user { color: blue; margin: 8px 0; }
+    .bot { color: green; margin: 8px 0; }
+    input { padding: 10px; width: 70%; }
+    button { padding: 10px; }
+  </style>
+</head>
+<body>
+
+<h1>Gemini Chatbot</h1>
+
+<div id="chatbox"></div>
+<br>
+<input type="text" id="query" placeholder="Ask anything...">
+<button onclick="askBot()">Send</button>
+
+<script>
+async function askBot() {
+  const input = document.getElementById("query");
+  const chatbox = document.getElementById("chatbox");
+  const question = input.value.trim();
+  if (!question) return;
+
+  chatbox.innerHTML += `<div class="user"><b>You:</b> ${question}</div>`;
+  input.value = "";
+  chatbox.scrollTop = chatbox.scrollHeight;
+
+  const response = await fetch("/ask", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ question })
+  });
+
+  const data = await response.json();
+
+  chatbox.innerHTML += `<div class="bot"><b>Bot:</b> ${data.answer}</div>`;
+  chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+document.getElementById("query").addEventListener("keydown", e => {
+  if (e.key === "Enter") askBot();
+});
+</script>
+
+</body>
+</html>
